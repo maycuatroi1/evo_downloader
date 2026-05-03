@@ -137,14 +137,20 @@ class Downloader:
         if supports_range:
             self.logger.info(f"Downloading the file using {self.num_threads} threads.")
             with progress:
-                with concurrent.futures.ThreadPoolExecutor(max_workers=self.num_threads) as executor:
+                with concurrent.futures.ThreadPoolExecutor(
+                    max_workers=self.num_threads
+                ) as executor:
                     futures = [
                         executor.submit(
                             self.download_chunk,
                             url,
                             headers,
                             i * chunk_size,
-                            ((i + 1) * chunk_size - 1 if i < self.num_threads - 1 else file_size - 1),
+                            (
+                                (i + 1) * chunk_size - 1
+                                if i < self.num_threads - 1
+                                else file_size - 1
+                            ),
                             os.path.join(temp_folder, f"part_{unique_id}_{i}"),
                             progress,
                             task_id,
@@ -155,7 +161,9 @@ class Downloader:
                     for future in concurrent.futures.as_completed(futures):
                         future.result()
         else:
-            self.logger.warning("Server does not support range requests. Downloading the file in a single thread.")
+            self.logger.warning(
+                "Server does not support range requests. Downloading the file in a single thread."
+            )
             response = requests.get(url, headers=headers, stream=True)
             response.raise_for_status()
             temp_file_path = os.path.join(temp_folder, f"{file_name}.temp")
@@ -200,7 +208,9 @@ class Downloader:
         downloaded_files = []
 
         for i, item in enumerate(file_urls, start=1):
-            file_name, file_url = item if isinstance(item, tuple) else (os.path.basename(item), item)
+            file_name, file_url = (
+                item if isinstance(item, tuple) else (os.path.basename(item), item)
+            )
 
             if os.path.isfile(file_name):
                 continue
@@ -214,6 +224,8 @@ class Downloader:
                 f"File successfully downloaded ({i}/{len(file_urls)}): "
                 f"{file_name} ({humanize.naturalsize(file_size)}) - {total_time:.2f} seconds"
             )
-            self.console.log(f"Total download speed: {humanize.naturalsize(file_size / total_time)}/s")
+            self.console.log(
+                f"Total download speed: {humanize.naturalsize(file_size / total_time)}/s"
+            )
 
         return downloaded_files
