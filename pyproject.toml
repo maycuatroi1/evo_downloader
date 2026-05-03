@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "evo_downloader"
-version = "1.0.7"
+version = "1.0.8"
 description = "Python downloading library that enhances your download speed"
 readme = "README.md"
 license = "MIT"
