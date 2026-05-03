@@ -78,7 +78,9 @@ class DownloaderGUI(QWidget):
         self.setLayout(layout)
 
     def select_folder(self):
-        folder = QFileDialog.getExistingDirectory(self, "Select Output Folder", os.path.expanduser("~/Downloads"))
+        folder = QFileDialog.getExistingDirectory(
+            self, "Select Output Folder", os.path.expanduser("~/Downloads")
+        )
         if folder:
             self.folder_input.setText(folder)
 
